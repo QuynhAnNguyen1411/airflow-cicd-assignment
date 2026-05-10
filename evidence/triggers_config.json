@@ -1,0 +1,23 @@
+[
+  {
+    "createTime": "2026-05-10T15:41:52.628879585Z",
+    "description": "Deploy DAG to Composer when push to main",
+    "filename": "cloudbuild.yaml",
+    "github": {
+      "name": "airflow-cicd-assignment",
+      "owner": "QuynhAnNguyen1411",
+      "push": {
+        "branch": "^main$"
+      }
+    },
+    "id": "b9f074e2-64ab-4ca8-bc80-edc5d47e51c7",
+    "name": "deploy-dag-on-push-main",
+    "resourceName": "projects/healthcare-analytics-495602/locations/asia-southeast1/triggers/b9f074e2-64ab-4ca8-bc80-edc5d47e51c7",
+    "serviceAccount": "projects/healthcare-analytics-495602/serviceAccounts/304424401494-compute@developer.gserviceaccount.com",
+    "substitutions": {
+      "_COMPOSER_BUCKET": "gs://asia-southeast1-airflow-cic-db8a303d-bucket",
+      "_COMPOSER_ENV": "airflow-cicd-env",
+      "_COMPOSER_LOCATION": "asia-southeast1"
+    }
+  }
+]

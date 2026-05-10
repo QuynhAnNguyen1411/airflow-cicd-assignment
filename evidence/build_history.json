@@ -1,0 +1,705 @@
+[
+  {
+    "buildTriggerId": "b9f074e2-64ab-4ca8-bc80-edc5d47e51c7",
+    "createTime": "2026-05-10T16:03:42.435543Z",
+    "finishTime": "2026-05-10T16:06:31.322041Z",
+    "id": "7745887c-fa53-4008-ab29-6ea246e57b4e",
+    "logUrl": "https://console.cloud.google.com/cloud-build/builds;region=asia-southeast1/7745887c-fa53-4008-ab29-6ea246e57b4e?project=304424401494",
+    "name": "projects/304424401494/locations/asia-southeast1/builds/7745887c-fa53-4008-ab29-6ea246e57b4e",
+    "options": {
+      "dynamicSubstitutions": true,
+      "logging": "CLOUD_LOGGING_ONLY",
+      "pool": {},
+      "substitutionOption": "ALLOW_LOOSE"
+    },
+    "projectId": "healthcare-analytics-495602",
+    "queueTtl": "3600s",
+    "results": {
+      "buildStepImages": [
+        "sha256:a5b427ace4900267d93db34138e512325c6fa6af84ad5e4ed5f3b36258cc4142",
+        "sha256:a5b427ace4900267d93db34138e512325c6fa6af84ad5e4ed5f3b36258cc4142",
+        "sha256:6f2cbf0163c6c3b653f447c3e21fc30eacaa4b8d33ef7f18c9927e53732523c3",
+        "sha256:42d0af3434d40a895da768a87001b87938c3ff2a0f16c81a00e78b857b75b611"
+      ],
+      "buildStepOutputs": [
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    "serviceAccount": "projects/healthcare-analytics-495602/serviceAccounts/304424401494-compute@developer.gserviceaccount.com",
+    "source": {
+      "gitSource": {
+        "revision": "2cbc1068bec750b8b37c261174a0c1b983c9e9ed",
+        "url": "https://github.com/QuynhAnNguyen1411/airflow-cicd-assignment.git"
+      }
+    },
+    "sourceProvenance": {
+      "resolvedGitSource": {
+        "revision": "2cbc1068bec750b8b37c261174a0c1b983c9e9ed",
+        "url": "https://github.com/QuynhAnNguyen1411/airflow-cicd-assignment.git"
+      }
+    },
+    "startTime": "2026-05-10T16:03:43.854550832Z",
+    "status": "SUCCESS",
+    "steps": [
+      {
+        "args": [
+          "-c",
+          "pip install --quiet --no-cache-dir flake8\nflake8 dags/ tests/ --max-line-length=120 --extend-ignore=E501,E402,W503,E221,E302,W292,W293\n"
+        ],
+        "entrypoint": "bash",
+        "id": "lint",
+        "name": "python:3.11-slim",
+        "pullTiming": {
+          "endTime": "2026-05-10T16:03:53.049705489Z",
+          "startTime": "2026-05-10T16:03:47.061510500Z"
+        },
+        "status": "SUCCESS",
+        "timing": {
+          "endTime": "2026-05-10T16:03:57.925714558Z",
+          "startTime": "2026-05-10T16:03:47.061510500Z"
+        }
+      },
+      {
+        "args": [
+          "-c",
+          "pip install --quiet --no-cache-dir -r requirements.txt\npytest tests/ -v\n"
+        ],
+        "entrypoint": "bash",
+        "id": "test",
+        "name": "python:3.11-slim",
+        "pullTiming": {
+          "endTime": "2026-05-10T16:03:57.928380275Z",
+          "startTime": "2026-05-10T16:03:57.925799574Z"
+        },
+        "status": "SUCCESS",
+        "timing": {
+          "endTime": "2026-05-10T16:04:03.531338608Z",
+          "startTime": "2026-05-10T16:03:57.925799574Z"
+        }
+      },
+      {
+        "args": [
+          "cp",
+          "dags/example_etl_dag.py",
+          "gs://asia-southeast1-airflow-cic-db8a303d-bucket/dags/"
+        ],
+        "id": "deploy-dag",
+        "name": "gcr.io/cloud-builders/gsutil",
+        "pullTiming": {
+          "endTime": "2026-05-10T16:04:08.193596822Z",
+          "startTime": "2026-05-10T16:04:03.531439635Z"
+        },
+        "status": "SUCCESS",
+        "timing": {
+          "endTime": "2026-05-10T16:04:14.031494562Z",
+          "startTime": "2026-05-10T16:04:03.531439635Z"
+        }
+      },
+      {
+        "args": [
+          "-c",
+          "sleep 60\ngcloud composer environments run airflow-cicd-env \\\n  --location=asia-southeast1 \\\n  dags trigger -- healthcare_etl_pipeline\n"
+        ],
+        "entrypoint": "bash",
+        "id": "trigger-dag",
+        "name": "gcr.io/google.com/cloudsdktool/cloud-sdk:slim",
+        "pullTiming": {
+          "endTime": "2026-05-10T16:05:07.115624960Z",
+          "startTime": "2026-05-10T16:04:14.031600658Z"
+        },
+        "status": "SUCCESS",
+        "timing": {
+          "endTime": "2026-05-10T16:06:31.154442001Z",
+          "startTime": "2026-05-10T16:04:14.031600658Z"
+        }
+      }
+    ],
+    "substitutions": {
+      "BRANCH_NAME": "main",
+      "COMMIT_SHA": "2cbc1068bec750b8b37c261174a0c1b983c9e9ed",
+      "REF_NAME": "main",
+      "REPO_FULL_NAME": "QuynhAnNguyen1411/airflow-cicd-assignment",
+      "REPO_NAME": "airflow-cicd-assignment",
+      "REVISION_ID": "2cbc1068bec750b8b37c261174a0c1b983c9e9ed",
+      "SHORT_SHA": "2cbc106",
+      "TRIGGER_BUILD_CONFIG_PATH": "cloudbuild.yaml",
+      "TRIGGER_NAME": "deploy-dag-on-push-main",
+      "_COMPOSER_BUCKET": "gs://asia-southeast1-airflow-cic-db8a303d-bucket",
+      "_COMPOSER_ENV": "airflow-cicd-env",
+      "_COMPOSER_LOCATION": "asia-southeast1"
+    },
+    "tags": [
+      "trigger-b9f074e2-64ab-4ca8-bc80-edc5d47e51c7"
+    ],
+    "timeout": "1200s",
+    "timing": {
+      "BUILD": {
+        "endTime": "2026-05-10T16:06:31.154547953Z",
+        "startTime": "2026-05-10T16:03:46.328780111Z"
+      },
+      "FETCHSOURCE": {
+        "endTime": "2026-05-10T16:03:46.328685210Z",
+        "startTime": "2026-05-10T16:03:44.168908069Z"
+      },
+      "GIT_SOURCE": {
+        "endTime": "2026-05-10T16:03:46.328685210Z",
+        "startTime": "2026-05-10T16:03:44.168908069Z"
+      }
+    }
+  },
+  {
+    "buildTriggerId": "b9f074e2-64ab-4ca8-bc80-edc5d47e51c7",
+    "createTime": "2026-05-10T15:59:46.157128Z",
+    "failureInfo": {
+      "detail": "Build step failure: build step 2 \"gcr.io/cloud-builders/gsutil\" failed: step exited with non-zero status: 1",
+      "type": "USER_BUILD_STEP"
+    },
+    "finishTime": "2026-05-10T16:00:27.271249Z",
+    "id": "45ed190f-76bc-4000-b347-f37832270713",
+    "logUrl": "https://console.cloud.google.com/cloud-build/builds;region=asia-southeast1/45ed190f-76bc-4000-b347-f37832270713?project=304424401494",
+    "name": "projects/304424401494/locations/asia-southeast1/builds/45ed190f-76bc-4000-b347-f37832270713",
+    "options": {
+      "dynamicSubstitutions": true,
+      "logging": "CLOUD_LOGGING_ONLY",
+      "pool": {},
+      "substitutionOption": "ALLOW_LOOSE"
+    },
+    "projectId": "healthcare-analytics-495602",
+    "queueTtl": "3600s",
+    "results": {
+      "buildStepImages": [
+        "sha256:a5b427ace4900267d93db34138e512325c6fa6af84ad5e4ed5f3b36258cc4142",
+        "sha256:a5b427ace4900267d93db34138e512325c6fa6af84ad5e4ed5f3b36258cc4142",
+        "sha256:6f2cbf0163c6c3b653f447c3e21fc30eacaa4b8d33ef7f18c9927e53732523c3",
+        ""
+      ],
+      "buildStepOutputs": [
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    "serviceAccount": "projects/healthcare-analytics-495602/serviceAccounts/304424401494-compute@developer.gserviceaccount.com",
+    "source": {
+      "gitSource": {
+        "revision": "2cbc1068bec750b8b37c261174a0c1b983c9e9ed",
+        "url": "https://github.com/QuynhAnNguyen1411/airflow-cicd-assignment.git"
+      }
+    },
+    "sourceProvenance": {
+      "resolvedGitSource": {
+        "revision": "2cbc1068bec750b8b37c261174a0c1b983c9e9ed",
+        "url": "https://github.com/QuynhAnNguyen1411/airflow-cicd-assignment.git"
+      }
+    },
+    "startTime": "2026-05-10T15:59:47.510806023Z",
+    "status": "FAILURE",
+    "steps": [
+      {
+        "args": [
+          "-c",
+          "pip install --quiet --no-cache-dir flake8\nflake8 dags/ tests/ --max-line-length=120 --extend-ignore=E501,E402,W503,E221,E302,W292,W293\n"
+        ],
+        "entrypoint": "bash",
+        "id": "lint",
+        "name": "python:3.11-slim",
+        "pullTiming": {
+          "endTime": "2026-05-10T15:59:56.726966443Z",
+          "startTime": "2026-05-10T15:59:50.882859826Z"
+        },
+        "status": "SUCCESS",
+        "timing": {
+          "endTime": "2026-05-10T16:00:01.354752923Z",
+          "startTime": "2026-05-10T15:59:50.882859826Z"
+        }
+      },
+      {
+        "args": [
+          "-c",
+          "pip install --quiet --no-cache-dir -r requirements.txt\npytest tests/ -v\n"
+        ],
+        "entrypoint": "bash",
+        "id": "test",
+        "name": "python:3.11-slim",
+        "pullTiming": {
+          "endTime": "2026-05-10T16:00:01.356934424Z",
+          "startTime": "2026-05-10T16:00:01.354827001Z"
+        },
+        "status": "SUCCESS",
+        "timing": {
+          "endTime": "2026-05-10T16:00:07.108436154Z",
+          "startTime": "2026-05-10T16:00:01.354827001Z"
+        }
+      },
+      {
+        "args": [
+          "cp",
+          "dags/example_etl_dag.py",
+          "COMPOSER_BUCKET = gs://asia-southeast1-airflow-cic-db8a303d-bucket/dags/"
+        ],
+        "exitCode": 1,
+        "id": "deploy-dag",
+        "name": "gcr.io/cloud-builders/gsutil",
+        "pullTiming": {
+          "endTime": "2026-05-10T16:00:11.936761327Z",
+          "startTime": "2026-05-10T16:00:07.108587151Z"
+        },
+        "status": "FAILURE",
+        "timing": {
+          "endTime": "2026-05-10T16:00:16.680547234Z",
+          "startTime": "2026-05-10T16:00:07.108587151Z"
+        }
+      },
+      {
+        "args": [
+          "-c",
+          "sleep 60\ngcloud composer environments run airflow-cicd-env \\\n  --location=asia-southeast1 \\\n  dags trigger -- healthcare_etl_pipeline\n"
+        ],
+        "entrypoint": "bash",
+        "id": "trigger-dag",
+        "name": "gcr.io/google.com/cloudsdktool/cloud-sdk:slim",
+        "status": "QUEUED"
+      }
+    ],
+    "substitutions": {
+      "BRANCH_NAME": "main",
+      "COMMIT_SHA": "2cbc1068bec750b8b37c261174a0c1b983c9e9ed",
+      "REF_NAME": "main",
+      "REPO_FULL_NAME": "QuynhAnNguyen1411/airflow-cicd-assignment",
+      "REPO_NAME": "airflow-cicd-assignment",
+      "REVISION_ID": "2cbc1068bec750b8b37c261174a0c1b983c9e9ed",
+      "SHORT_SHA": "2cbc106",
+      "TRIGGER_BUILD_CONFIG_PATH": "cloudbuild.yaml",
+      "TRIGGER_NAME": "deploy-dag-on-push-main",
+      "_COMPOSER_BUCKET": "COMPOSER_BUCKET = gs://asia-southeast1-airflow-cic-db8a303d-bucket",
+      "_COMPOSER_ENV": "airflow-cicd-env",
+      "_COMPOSER_LOCATION": "asia-southeast1"
+    },
+    "tags": [
+      "trigger-b9f074e2-64ab-4ca8-bc80-edc5d47e51c7"
+    ],
+    "timeout": "1200s",
+    "timing": {
+      "BUILD": {
+        "endTime": "2026-05-10T16:00:16.680630903Z",
+        "startTime": "2026-05-10T15:59:50.206259496Z"
+      },
+      "FETCHSOURCE": {
+        "endTime": "2026-05-10T15:59:50.206164420Z",
+        "startTime": "2026-05-10T15:59:48.274061558Z"
+      },
+      "GIT_SOURCE": {
+        "endTime": "2026-05-10T15:59:50.206164420Z",
+        "startTime": "2026-05-10T15:59:48.274061558Z"
+      }
+    }
+  },
+  {
+    "buildTriggerId": "b9f074e2-64ab-4ca8-bc80-edc5d47e51c7",
+    "createTime": "2026-05-10T15:58:06.132996Z",
+    "failureInfo": {
+      "detail": "Build step failure: build step 0 \"python:3.11-slim\" failed: step exited with non-zero status: 1",
+      "type": "USER_BUILD_STEP"
+    },
+    "finishTime": "2026-05-10T15:58:31.704551Z",
+    "id": "b6382c54-9163-4548-bf98-f49196bdce9c",
+    "logUrl": "https://console.cloud.google.com/cloud-build/builds;region=asia-southeast1/b6382c54-9163-4548-bf98-f49196bdce9c?project=304424401494",
+    "name": "projects/304424401494/locations/asia-southeast1/builds/b6382c54-9163-4548-bf98-f49196bdce9c",
+    "options": {
+      "dynamicSubstitutions": true,
+      "logging": "CLOUD_LOGGING_ONLY",
+      "pool": {},
+      "substitutionOption": "ALLOW_LOOSE"
+    },
+    "projectId": "healthcare-analytics-495602",
+    "queueTtl": "3600s",
+    "results": {
+      "buildStepImages": [
+        "sha256:a5b427ace4900267d93db34138e512325c6fa6af84ad5e4ed5f3b36258cc4142",
+        "",
+        "",
+        ""
+      ],
+      "buildStepOutputs": [
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    "serviceAccount": "projects/healthcare-analytics-495602/serviceAccounts/304424401494-compute@developer.gserviceaccount.com",
+    "source": {
+      "gitSource": {
+        "revision": "6bbfdaba69532ae55ee321fa0c37fdc300a12158",
+        "url": "https://github.com/QuynhAnNguyen1411/airflow-cicd-assignment.git"
+      }
+    },
+    "sourceProvenance": {
+      "resolvedGitSource": {
+        "revision": "6bbfdaba69532ae55ee321fa0c37fdc300a12158",
+        "url": "https://github.com/QuynhAnNguyen1411/airflow-cicd-assignment.git"
+      }
+    },
+    "startTime": "2026-05-10T15:58:07.436917261Z",
+    "status": "FAILURE",
+    "steps": [
+      {
+        "args": [
+          "-c",
+          "pip install --quiet --no-cache-dir flake8\nflake8 dags/ tests/ --max-line-length=120 --extend-ignore=E501,E402,W503,E221,E302,W292,W293\n"
+        ],
+        "entrypoint": "bash",
+        "exitCode": 1,
+        "id": "lint",
+        "name": "python:3.11-slim",
+        "pullTiming": {
+          "endTime": "2026-05-10T15:58:16.620781339Z",
+          "startTime": "2026-05-10T15:58:10.914535400Z"
+        },
+        "status": "FAILURE",
+        "timing": {
+          "endTime": "2026-05-10T15:58:21.160067808Z",
+          "startTime": "2026-05-10T15:58:10.914535400Z"
+        }
+      },
+      {
+        "args": [
+          "-c",
+          "pip install --quiet --no-cache-dir -r requirements.txt\npytest tests/ -v\n"
+        ],
+        "entrypoint": "bash",
+        "id": "test",
+        "name": "python:3.11-slim",
+        "status": "QUEUED"
+      },
+      {
+        "args": [
+          "cp",
+          "dags/example_etl_dag.py",
+          "COMPOSER_BUCKET = gs://asia-southeast1-airflow-cic-db8a303d-bucket/dags/"
+        ],
+        "id": "deploy-dag",
+        "name": "gcr.io/cloud-builders/gsutil",
+        "status": "QUEUED"
+      },
+      {
+        "args": [
+          "-c",
+          "sleep 60\ngcloud composer environments run airflow-cicd-env \\\n  --location=asia-southeast1 \\\n  dags trigger -- healthcare_etl_pipeline\n"
+        ],
+        "entrypoint": "bash",
+        "id": "trigger-dag",
+        "name": "gcr.io/google.com/cloudsdktool/cloud-sdk:slim",
+        "status": "QUEUED"
+      }
+    ],
+    "substitutions": {
+      "BRANCH_NAME": "main",
+      "COMMIT_SHA": "6bbfdaba69532ae55ee321fa0c37fdc300a12158",
+      "REF_NAME": "main",
+      "REPO_FULL_NAME": "QuynhAnNguyen1411/airflow-cicd-assignment",
+      "REPO_NAME": "airflow-cicd-assignment",
+      "REVISION_ID": "6bbfdaba69532ae55ee321fa0c37fdc300a12158",
+      "SHORT_SHA": "6bbfdab",
+      "TRIGGER_BUILD_CONFIG_PATH": "cloudbuild.yaml",
+      "TRIGGER_NAME": "deploy-dag-on-push-main",
+      "_COMPOSER_BUCKET": "COMPOSER_BUCKET = gs://asia-southeast1-airflow-cic-db8a303d-bucket",
+      "_COMPOSER_ENV": "airflow-cicd-env",
+      "_COMPOSER_LOCATION": "asia-southeast1"
+    },
+    "tags": [
+      "trigger-b9f074e2-64ab-4ca8-bc80-edc5d47e51c7"
+    ],
+    "timeout": "1200s",
+    "timing": {
+      "BUILD": {
+        "endTime": "2026-05-10T15:58:21.160129567Z",
+        "startTime": "2026-05-10T15:58:10.288221852Z"
+      },
+      "FETCHSOURCE": {
+        "endTime": "2026-05-10T15:58:10.287972789Z",
+        "startTime": "2026-05-10T15:58:08.283739658Z"
+      },
+      "GIT_SOURCE": {
+        "endTime": "2026-05-10T15:58:10.287972789Z",
+        "startTime": "2026-05-10T15:58:08.283739658Z"
+      }
+    }
+  },
+  {
+    "buildTriggerId": "b9f074e2-64ab-4ca8-bc80-edc5d47e51c7",
+    "createTime": "2026-05-10T15:55:37.019660Z",
+    "failureInfo": {
+      "detail": "Build step failure: build step 1 \"python:3.11-slim\" failed: step exited with non-zero status: 127",
+      "type": "USER_BUILD_STEP"
+    },
+    "finishTime": "2026-05-10T15:56:04.325772Z",
+    "id": "587e3356-1ad9-48b2-8e9f-cc51f2fe2567",
+    "logUrl": "https://console.cloud.google.com/cloud-build/builds;region=asia-southeast1/587e3356-1ad9-48b2-8e9f-cc51f2fe2567?project=304424401494",
+    "name": "projects/304424401494/locations/asia-southeast1/builds/587e3356-1ad9-48b2-8e9f-cc51f2fe2567",
+    "options": {
+      "dynamicSubstitutions": true,
+      "logging": "CLOUD_LOGGING_ONLY",
+      "pool": {},
+      "substitutionOption": "ALLOW_LOOSE"
+    },
+    "projectId": "healthcare-analytics-495602",
+    "queueTtl": "3600s",
+    "results": {
+      "buildStepImages": [
+        "sha256:a5b427ace4900267d93db34138e512325c6fa6af84ad5e4ed5f3b36258cc4142",
+        "sha256:a5b427ace4900267d93db34138e512325c6fa6af84ad5e4ed5f3b36258cc4142",
+        "",
+        ""
+      ],
+      "buildStepOutputs": [
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    "serviceAccount": "projects/healthcare-analytics-495602/serviceAccounts/304424401494-compute@developer.gserviceaccount.com",
+    "source": {
+      "gitSource": {
+        "revision": "2cad6f1766c31bb5e055d2e3e618eb0f17cd8a40",
+        "url": "https://github.com/QuynhAnNguyen1411/airflow-cicd-assignment.git"
+      }
+    },
+    "sourceProvenance": {
+      "resolvedGitSource": {
+        "revision": "2cad6f1766c31bb5e055d2e3e618eb0f17cd8a40",
+        "url": "https://github.com/QuynhAnNguyen1411/airflow-cicd-assignment.git"
+      }
+    },
+    "startTime": "2026-05-10T15:55:38.364607292Z",
+    "status": "FAILURE",
+    "steps": [
+      {
+        "args": [
+          "-c",
+          "pip install --quiet --no-cache-dir flake8\nflake8 dags/ tests/ --max-line-length=120 --extend-ignore=E501,E402,W503,E221,E302,W292,W293\n"
+        ],
+        "entrypoint": "bash",
+        "id": "lint",
+        "name": "python:3.11-slim",
+        "pullTiming": {
+          "endTime": "2026-05-10T15:55:46.494246756Z",
+          "startTime": "2026-05-10T15:55:41.341595824Z"
+        },
+        "status": "SUCCESS",
+        "timing": {
+          "endTime": "2026-05-10T15:55:50.611094241Z",
+          "startTime": "2026-05-10T15:55:41.341595824Z"
+        }
+      },
+      {
+        "args": [
+          "-c",
+          "pip install --quiet --no-cache-dir -r requirements.txt\npytest tests/ -v\n"
+        ],
+        "entrypoint": "bash",
+        "exitCode": 127,
+        "id": "test",
+        "name": "python:3.11-slim",
+        "pullTiming": {
+          "endTime": "2026-05-10T15:55:50.612485064Z",
+          "startTime": "2026-05-10T15:55:50.611161430Z"
+        },
+        "status": "FAILURE",
+        "timing": {
+          "endTime": "2026-05-10T15:55:53.648728478Z",
+          "startTime": "2026-05-10T15:55:50.611161430Z"
+        }
+      },
+      {
+        "args": [
+          "cp",
+          "dags/example_etl_dag.py",
+          "COMPOSER_BUCKET = gs://asia-southeast1-airflow-cic-db8a303d-bucket/dags/"
+        ],
+        "id": "deploy-dag",
+        "name": "gcr.io/cloud-builders/gsutil",
+        "status": "QUEUED"
+      },
+      {
+        "args": [
+          "-c",
+          "sleep 60\ngcloud composer environments run airflow-cicd-env \\\n  --location=asia-southeast1 \\\n  dags trigger -- healthcare_etl_pipeline\n"
+        ],
+        "entrypoint": "bash",
+        "id": "trigger-dag",
+        "name": "gcr.io/google.com/cloudsdktool/cloud-sdk:slim",
+        "status": "QUEUED"
+      }
+    ],
+    "substitutions": {
+      "BRANCH_NAME": "main",
+      "COMMIT_SHA": "2cad6f1766c31bb5e055d2e3e618eb0f17cd8a40",
+      "REF_NAME": "main",
+      "REPO_FULL_NAME": "QuynhAnNguyen1411/airflow-cicd-assignment",
+      "REPO_NAME": "airflow-cicd-assignment",
+      "REVISION_ID": "2cad6f1766c31bb5e055d2e3e618eb0f17cd8a40",
+      "SHORT_SHA": "2cad6f1",
+      "TRIGGER_BUILD_CONFIG_PATH": "cloudbuild.yaml",
+      "TRIGGER_NAME": "deploy-dag-on-push-main",
+      "_COMPOSER_BUCKET": "COMPOSER_BUCKET = gs://asia-southeast1-airflow-cic-db8a303d-bucket",
+      "_COMPOSER_ENV": "airflow-cicd-env",
+      "_COMPOSER_LOCATION": "asia-southeast1"
+    },
+    "tags": [
+      "trigger-b9f074e2-64ab-4ca8-bc80-edc5d47e51c7"
+    ],
+    "timeout": "1200s",
+    "timing": {
+      "BUILD": {
+        "endTime": "2026-05-10T15:55:53.648827173Z",
+        "startTime": "2026-05-10T15:55:40.777269405Z"
+      },
+      "FETCHSOURCE": {
+        "endTime": "2026-05-10T15:55:40.777195311Z",
+        "startTime": "2026-05-10T15:55:39.016825323Z"
+      },
+      "GIT_SOURCE": {
+        "endTime": "2026-05-10T15:55:40.777195311Z",
+        "startTime": "2026-05-10T15:55:39.016825323Z"
+      }
+    }
+  },
+  {
+    "buildTriggerId": "b9f074e2-64ab-4ca8-bc80-edc5d47e51c7",
+    "createTime": "2026-05-10T15:48:43.961762Z",
+    "failureInfo": {
+      "detail": "Build step failure: build step 0 \"python:3.11-slim\" failed: step exited with non-zero status: 1",
+      "type": "USER_BUILD_STEP"
+    },
+    "finishTime": "2026-05-10T15:49:09.771970Z",
+    "id": "d6cfb2d1-1c9f-43f1-8078-bc8bbef07971",
+    "logUrl": "https://console.cloud.google.com/cloud-build/builds;region=asia-southeast1/d6cfb2d1-1c9f-43f1-8078-bc8bbef07971?project=304424401494",
+    "name": "projects/304424401494/locations/asia-southeast1/builds/d6cfb2d1-1c9f-43f1-8078-bc8bbef07971",
+    "options": {
+      "dynamicSubstitutions": true,
+      "logging": "CLOUD_LOGGING_ONLY",
+      "pool": {},
+      "substitutionOption": "ALLOW_LOOSE"
+    },
+    "projectId": "healthcare-analytics-495602",
+    "queueTtl": "3600s",
+    "results": {
+      "buildStepImages": [
+        "sha256:a5b427ace4900267d93db34138e512325c6fa6af84ad5e4ed5f3b36258cc4142",
+        "",
+        "",
+        ""
+      ],
+      "buildStepOutputs": [
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    "serviceAccount": "projects/healthcare-analytics-495602/serviceAccounts/304424401494-compute@developer.gserviceaccount.com",
+    "source": {
+      "gitSource": {
+        "revision": "8d40ce0c8f57257292c7099a4e6fdfa76881326e",
+        "url": "https://github.com/QuynhAnNguyen1411/airflow-cicd-assignment.git"
+      }
+    },
+    "sourceProvenance": {
+      "resolvedGitSource": {
+        "revision": "8d40ce0c8f57257292c7099a4e6fdfa76881326e",
+        "url": "https://github.com/QuynhAnNguyen1411/airflow-cicd-assignment.git"
+      }
+    },
+    "startTime": "2026-05-10T15:48:45.319499218Z",
+    "status": "FAILURE",
+    "steps": [
+      {
+        "args": [
+          "-c",
+          "pip install --quiet --no-cache-dir flake8\nflake8 dags/ tests/ --max-line-length=120 --extend-ignore=E501,E402,W503\n"
+        ],
+        "entrypoint": "bash",
+        "exitCode": 1,
+        "id": "lint",
+        "name": "python:3.11-slim",
+        "pullTiming": {
+          "endTime": "2026-05-10T15:48:54.517661596Z",
+          "startTime": "2026-05-10T15:48:48.743832664Z"
+        },
+        "status": "FAILURE",
+        "timing": {
+          "endTime": "2026-05-10T15:48:59.117687570Z",
+          "startTime": "2026-05-10T15:48:48.743832664Z"
+        }
+      },
+      {
+        "args": [
+          "-c",
+          "pip install --quiet --no-cache-dir -r requirements.txt\npytest tests/ -v\n"
+        ],
+        "entrypoint": "bash",
+        "id": "test",
+        "name": "python:3.11-slim",
+        "status": "QUEUED"
+      },
+      {
+        "args": [
+          "cp",
+          "dags/example_etl_dag.py",
+          "COMPOSER_BUCKET = gs://asia-southeast1-airflow-cic-db8a303d-bucket/dags/"
+        ],
+        "id": "deploy-dag",
+        "name": "gcr.io/cloud-builders/gsutil",
+        "status": "QUEUED"
+      },
+      {
+        "args": [
+          "-c",
+          "sleep 60\ngcloud composer environments run airflow-cicd-env \\\n  --location=asia-southeast1 \\\n  dags trigger -- healthcare_etl_pipeline\n"
+        ],
+        "entrypoint": "bash",
+        "id": "trigger-dag",
+        "name": "gcr.io/google.com/cloudsdktool/cloud-sdk:slim",
+        "status": "QUEUED"
+      }
+    ],
+    "substitutions": {
+      "BRANCH_NAME": "main",
+      "COMMIT_SHA": "8d40ce0c8f57257292c7099a4e6fdfa76881326e",
+      "REF_NAME": "main",
+      "REPO_FULL_NAME": "QuynhAnNguyen1411/airflow-cicd-assignment",
+      "REPO_NAME": "airflow-cicd-assignment",
+      "REVISION_ID": "8d40ce0c8f57257292c7099a4e6fdfa76881326e",
+      "SHORT_SHA": "8d40ce0",
+      "TRIGGER_BUILD_CONFIG_PATH": "cloudbuild.yaml",
+      "TRIGGER_NAME": "deploy-dag-on-push-main",
+      "_COMPOSER_BUCKET": "COMPOSER_BUCKET = gs://asia-southeast1-airflow-cic-db8a303d-bucket",
+      "_COMPOSER_ENV": "airflow-cicd-env",
+      "_COMPOSER_LOCATION": "asia-southeast1"
+    },
+    "tags": [
+      "trigger-b9f074e2-64ab-4ca8-bc80-edc5d47e51c7"
+    ],
+    "timeout": "1200s",
+    "timing": {
+      "BUILD": {
+        "endTime": "2026-05-10T15:48:59.117788511Z",
+        "startTime": "2026-05-10T15:48:48.082445447Z"
+      },
+      "FETCHSOURCE": {
+        "endTime": "2026-05-10T15:48:48.082371261Z",
+        "startTime": "2026-05-10T15:48:46.114141985Z"
+      },
+      "GIT_SOURCE": {
+        "endTime": "2026-05-10T15:48:48.082371261Z",
+        "startTime": "2026-05-10T15:48:46.114141985Z"
+      }
+    }
+  }
+]
