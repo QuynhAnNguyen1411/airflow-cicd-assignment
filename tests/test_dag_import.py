@@ -1,6 +1,5 @@
 """Test DAG file - lightweight version (no full Airflow install needed)."""
 import ast
-import sys
 from pathlib import Path
 
 DAG_FILE = Path(__file__).parent.parent / "dags" / "example_etl_dag.py"
