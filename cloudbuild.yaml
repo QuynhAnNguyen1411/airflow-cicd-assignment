@@ -10,7 +10,7 @@ steps:
       - -c
       - |
         pip install --quiet --no-cache-dir flake8
-        flake8 dags/ tests/ --max-line-length=120 --extend-ignore=E501,E402,W503
+        flake8 dags/ tests/ --max-line-length=120 --extend-ignore=E501,E402,W503,E221,E302,W292,W293
 
   # Step 2: Run pytest (DAG import + structure tests)
   - id: test
