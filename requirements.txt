@@ -1,0 +1,5 @@
+cat > requirements.txt << 'EOF'
+apache-airflow==2.9.3
+apache-airflow-providers-google==10.20.0
+pytest==8.3.0
+EOF
