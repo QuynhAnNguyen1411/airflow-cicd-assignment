@@ -46,7 +46,7 @@ def bq_task(task_id: str, sql: str) -> BigQueryInsertJobOperator:
 # ============================================================
 with DAG(
     dag_id="healthcare_etl_pipeline",
-    description="Bronze → Silver → Gold ETL on BigQuery",
+    description="Bronze → Silver → Gold ETL on BigQuery (v2 - test CI/CD)",
     default_args=DEFAULT_ARGS,
     start_date=datetime(2026, 1, 1),
     schedule="@daily",                 # Chạy hằng ngày, hoặc None để chỉ chạy thủ công
