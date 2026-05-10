@@ -1,0 +1,52 @@
+# CI/CD pipeline for Airflow DAG
+# Triggered on push to main branch
+steps:
+
+  # Step 1: Install Python deps + lint
+  - id: lint
+    name: python:3.11-slim
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        pip install --quiet --no-cache-dir flake8
+        flake8 dags/ tests/ --max-line-length=120 --extend-ignore=E501,E402,W503
+
+  # Step 2: Run pytest (DAG import + structure tests)
+  - id: test
+    name: python:3.11-slim
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        pip install --quiet --no-cache-dir -r requirements.txt
+        pytest tests/ -v
+
+  # Step 3: Deploy DAG to Composer bucket
+  - id: deploy-dag
+    name: gcr.io/cloud-builders/gsutil
+    args: ['cp', 'dags/example_etl_dag.py', '${_COMPOSER_BUCKET}/dags/']
+
+  # Step 4: Trigger DAG run
+  - id: trigger-dag
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        sleep 60
+        gcloud composer environments run ${_COMPOSER_ENV} \
+          --location=${_COMPOSER_LOCATION} \
+          dags trigger -- healthcare_etl_pipeline
+
+# Substitution variables — sẽ set giá trị thật ở G5 khi tạo trigger
+substitutions:
+  _COMPOSER_BUCKET: gs://placeholder-bucket
+  _COMPOSER_ENV: placeholder-env
+  _COMPOSER_LOCATION: asia-southeast1
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8
+
+timeout: 1200s
