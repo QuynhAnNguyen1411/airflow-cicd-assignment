@@ -1,0 +1,80 @@
+{
+  "config": {
+    "airflowByoidUri": "https://fb5b2bdfa7234f48a9efc5dc371750ab-dot-asia-southeast1.composer.byoid.googleusercontent.com",
+    "airflowUri": "https://fb5b2bdfa7234f48a9efc5dc371750ab-dot-asia-southeast1.composer.googleusercontent.com",
+    "dagGcsPrefix": "gs://asia-southeast1-airflow-cic-a546098d-bucket/dags",
+    "dataRetentionConfig": {
+      "airflowMetadataRetentionConfig": {
+        "retentionDays": 60,
+        "retentionMode": "RETENTION_MODE_ENABLED"
+      }
+    },
+    "encryptionConfig": {},
+    "environmentSize": "ENVIRONMENT_SIZE_SMALL",
+    "nodeConfig": {
+      "composerInternalIpv4CidrBlock": "100.64.128.0/20",
+      "ipAllocationPolicy": {},
+      "serviceAccount": "304424401494-compute@developer.gserviceaccount.com"
+    },
+    "privateEnvironmentConfig": {
+      "networkingConfig": {},
+      "networkingType": "PUBLIC"
+    },
+    "softwareConfig": {
+      "cloudDataLineageIntegration": {},
+      "imageVersion": "composer-3-airflow-2.11.1-build.3",
+      "webServerPluginsMode": "PLUGINS_ENABLED"
+    },
+    "webServerNetworkAccessControl": {
+      "allowedIpRanges": [
+        {
+          "description": "Allows access from all IPv4 addresses (default value)",
+          "value": "0.0.0.0/0"
+        },
+        {
+          "description": "Allows access from all IPv6 addresses (default value)",
+          "value": "::0/0"
+        }
+      ]
+    },
+    "workloadsConfig": {
+      "dagProcessor": {
+        "count": 1,
+        "cpu": 1.0,
+        "memoryGb": 4.0,
+        "storageGb": 1.0
+      },
+      "scheduler": {
+        "count": 1,
+        "cpu": 0.5,
+        "memoryGb": 2.0,
+        "storageGb": 1.0
+      },
+      "triggerer": {
+        "count": 1,
+        "cpu": 0.5,
+        "memoryGb": 1.0
+      },
+      "webServer": {
+        "cpu": 1.0,
+        "memoryGb": 4.0,
+        "storageGb": 1.0
+      },
+      "worker": {
+        "cpu": 0.5,
+        "maxCount": 3,
+        "memoryGb": 2.0,
+        "minCount": 1,
+        "storageGb": 10.0
+      }
+    }
+  },
+  "createTime": "2026-05-11T14:52:53.228743Z",
+  "name": "projects/healthcare-analytics-495602/locations/asia-southeast1/environments/airflow-cicd-env",
+  "state": "RUNNING",
+  "storageConfig": {
+    "bucket": "asia-southeast1-airflow-cic-a546098d-bucket"
+  },
+  "updateTime": "2026-05-11T15:13:03.773172Z",
+  "uuid": "fb5b2bdf-a723-4f48-a9ef-c5dc371750ab"
+}
